@@ -37,7 +37,7 @@ class MoviesController < ApplicationController
  
   
   session[:sort] = @sort
-  session[:ratings] = @ratings
+  session[:ratings] = @checked_ratings
   
   end
 
