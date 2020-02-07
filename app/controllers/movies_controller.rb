@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
   def index
     @sort = params[:sort]
     @movies = Movie.all.order(@sort)
-    @all_ratings = Movie.order(:rating).select(:rating).map(&:rating).unique
+    @all_ratings = Movie.order(:rating).select(:rating).map(&:rating).uniq
     @checked_ratings = check_ratings
     
     
