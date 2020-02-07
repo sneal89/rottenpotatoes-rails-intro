@@ -30,14 +30,14 @@ class MoviesController < ApplicationController
       params[rating] = true
     end
     
-    if !@sort.nil?
-      begin
-        @movies = Movie.order("#{@sort} ASC ").find_all_by_rating(ratings)
-      rescue ActiveRecord::StatementInvalid
-      end
-    else
-        @movies = Movie.find_all_by_rating(ratings)
-    end
+    #if !@sort.nil?
+    #  begin
+    #    @movies = Movie.order("#{@sort} ASC ").find_all_by_rating(ratings)
+    #  rescue ActiveRecord::StatementInvalid
+    #  end
+    #else
+    #    @movies = Movie.find_all_by_rating(ratings)
+    #end
 
     if params[:sort]
       @movies = Movie.order(params[:sort])
