@@ -12,38 +12,34 @@ class MoviesController < ApplicationController
 
   def index
     
-    if params[:sort].nil? && params[:ratings].nil? && (!session[:sort].nil? || !session[:ratings].nil?)
-      redirect_to movies_path(:sort => session[:sort], :ratings => session[:ratings])
-    end
-    @ratings = params[:ratings]
-    if @ratings.nil?
-      ratings = params[:sort]
-    else
-      ratings = @ratings.keys
-    end
-    @sort = params[:sort]
-    @movies = Movie.all.order(@sort)
-    @all_ratings = Movie.order(:rating).select(:rating).map(&:rating).uniq
-    #@checked_ratings = check_ratings
-    #@checked_ratings.each do |rating|
-    #  params[rating] = true
-    #end
-    if !@sort.nil?
-      begin
-        @movies = Movie.order("#{@sort} ASC ").find_all_by_rating(ratings)
-      rescue ActiveRecord::StatementInvalid
-      end
-    else
-        @movies = Movie.find_all_by_rating(ratings)
+    @all_ratings = Movie.ratings
+    if !session[:ratings]
+      session[:ratings] = Movie.ratings_hash
     end
 
-    if params[:sort]
-      @movies = Movie.order(params[:sort])
+    if !params[:ratings]
+      if params[:sort] == "title"
+        session[:sort] = "title"
+        @movies = Movie.find_all_by_rating(session[:ratings].keys, :order => "title")
+      elsif params[:sort] == "release_date"
+        session[:sort] = "release_date"
+        @movies = Movie.find_all_by_rating(session[:ratings].keys, :order => "release_date")
+      else
+        @movies = Movie.find_all_by_rating(session[:ratings].keys, :order => session[:sort])
+      end
+
     else
-      @movies = Movie.where(:rating => @checked_ratings)
+      session[:ratings] = params[:ratings]
+      if params[:sort] == "title"
+        session[:sort] = "title"
+        @movies = Movie.find_all_by_rating(params[:ratings].keys, :order => "title")
+      elsif params[:sort] == "release_date"
+        session[:sort] = "release_date"
+        @movies = Movie.find_all_by_rating(params[:ratings].keys, :order => "release_date")
+      else
+        @movies = Movie.find_all_by_rating(params[:ratings].keys, :order => session[:sort])
+      end
     end
-    session[:sort] = @sort
-    session[:ratings] = @checked_ratings
   
   end
 
