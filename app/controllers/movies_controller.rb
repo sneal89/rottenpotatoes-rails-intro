@@ -14,9 +14,18 @@ class MoviesController < ApplicationController
     @sort = params[:sort]
     @movies = Movie.all.order(@sort)
     @all_ratings = Movie.order(:rating).select(:rating).map(&:rating).unique
-   
+    @checked_ratings = check_ratings
+    
     
   
+  end
+
+  def check_ratings
+    if params[:ratings]
+      params[:ratings].keys
+    else
+      @all_ratings
+    end
   end
 
   def new
