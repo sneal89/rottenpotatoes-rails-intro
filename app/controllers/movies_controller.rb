@@ -25,11 +25,7 @@ class MoviesController < ApplicationController
           all_ratings
       end
     
-     if !@sort.nil?
-      @movies = Movie.order("#{@sort} ASC").find_all_by_rating(ratings)
-     else
-      @movies = Movie.find_all_by_rating(ratings)
-     end
+     
     
   
   end
