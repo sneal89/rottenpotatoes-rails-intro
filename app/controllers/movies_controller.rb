@@ -26,18 +26,12 @@ class MoviesController < ApplicationController
       end
     
      if !@sort.nil?
-      begin
-        @movies = Movie.order("#{@sort} ASC").find_all_by_rating(ratings)
-      rescue ActiveRecord::StatementInvalid
-        flash[:warning] = "Movies cannot be sorted by #{@sort}."
-        @movies = Movie.find_all_by_rating(ratings)
-      end
+      @movies = Movie.order("#{@sort} ASC").find_all_by_rating(ratings)
      else
       @movies = Movie.find_all_by_rating(ratings)
      end
     
-    session[:sort] = @sort
-    session[:ratings] = @ratings
+  
   end
 
   def new
