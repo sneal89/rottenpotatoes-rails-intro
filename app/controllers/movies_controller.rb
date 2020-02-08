@@ -11,53 +11,8 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:sort].nil? && params[:ratings].nil? && (!session[:sort].nil? || !session[:ratings].nil?)
-      redirect_to movies_path(:sort => session[:sort], :ratings => session[:ratings])
-    end
-    
-    #@ratings = params[:ratings]
-    #if @ratings.nil?
-    #  ratings = params[:sort]
-    #else
-    #  ratings = @ratings.keys
-    #end
-    
-    @sort = params[:sort]
-    @movies = Movie.all.order(@sort)
-    @all_ratings = Movie.order(:rating).select(:rating).map(&:rating).uniq
-    @checked_ratings = check_ratings
-    @checked_ratings.each do |rating|
-      params[rating] = true
-    end
-    
-    #if !@sort.nil?
-    #  begin
-    #    @movies = Movie.order("#{@sort} ASC ").find_all_by_rating(ratings)
-    #  rescue ActiveRecord::StatementInvalid
-    #  end
-    #else
-    #    @movies = Movie.find_all_by_rating(ratings)
-    #end
-
-    if params[:sort]
-      @movies = Movie.order(params[:sort])
-    else
-      @movies = Movie.where(:rating => @checked_ratings)
-    end
-    
-    session[:sort] = @sort
-    session[:ratings] = @checked_ratings
-
-   
-  
-  end
-
-  def check_ratings
-    if params[:ratings]
-      params[:ratings].keys
-    else
-      @all_ratings
-    end
+    @movies = Movie.find(:all, :order => (params[:sort_by]))
+    @sort_column = params[:sort_by]
   end
 
   def new
