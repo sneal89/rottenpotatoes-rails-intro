@@ -13,7 +13,8 @@ class MoviesController < ApplicationController
   def index
     @all_ratings = Movie.ratings
     @sort = params[:sort] || session[:sort]
-    session[:ratings] = session[:ratings] || {'G'=>'', 'PG'=>'', 'PG-13'=>'', 'R'=>''}
+    #@hash = {'G'=> , 'PG'=> , 'PG-13'=> , 'R'=> }
+    session[:ratings] = session[:ratings]|| Movie.order(:rating).select(:rating).map(&:rating).uniq
     @t_param = params[:ratings] || session[:ratings]
     session[:sort] = @sort
     session[:ratings] = @t_param
