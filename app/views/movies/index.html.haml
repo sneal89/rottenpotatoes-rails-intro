@@ -12,8 +12,8 @@
   Include:
   - @all_ratings.each do |rating|
     = rating
-    = check_box_tag "ratings[#{rating}]", 1, @ratings ? (@ratings.keys.include?(rating) ? true : false) : true
-  = submit_tag 'Refresh', :id => 'ratings_submit'
+    = check_box_tag "ratings[#{rating}]"
+  = submit_tag 'Refresh'
 
 %table#movies.table.table-striped.col-md-12
   %thead
