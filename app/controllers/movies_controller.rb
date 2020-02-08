@@ -11,8 +11,30 @@ class MoviesController < ApplicationController
   end
 
   def index
-    @movies = Movie.order(params[:sort_by])
-    @sort_column = params[:sort_by]
+    @all_ratings = Movie.ratings
+    @movies = Movie.all
+    #Store the criteria for show movies
+    @sort = params[:sort] || session[:sort]
+    @ratings = params[:ratings] || session[:ratings]
+    
+    #Check the type of sort has been requested for get the movies based in the sort value
+    if(@sort)
+      session[:sort] = @sort
+      @movies = @movies.order(@sort)
+    end
+    
+    #Check the if the ratings has been requested for get the movies based in their rating
+    if(@ratings)
+      session[:ratings] = @ratings
+      @movies = @movies.where(rating: @ratings.keys)
+    end
+    
+    #Check if the entry params are different than the stored previously for updating the RESTful route
+    if params[:sort] != session[:sort] or params[:ratings] != session[:ratings]
+      session[:sort] = @sort
+      session[:ratings] = @ratings
+      redirect_to :sort => @sort, :ratings => @ratings and return
+    end
   end
 
   def new

@@ -6,4 +6,8 @@ class Movie < ActiveRecord::Base
 #    ['G', 'PG', 'PG-13', 'R']
 #end
 
+  def self.ratings
+    return ['G','PG','PG-13','R']
+  end
+
 end
