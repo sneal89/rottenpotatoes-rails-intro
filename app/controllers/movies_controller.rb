@@ -17,7 +17,14 @@ class MoviesController < ApplicationController
     @t_param = params[:ratings] || session[:ratings]
     session[:sort] = @sort
     session[:ratings] = @t_param
-    @movies = Movie.where(rating: session[:ratings]).order(session[:sort])
+    
+    @checked_ratings = check_ratings
+    
+    @checked_ratings.each do |rating|
+      params[rating] = true
+    end
+    #rating: session[:ratings]
+    @movies = Movie.where(:rating => @checked_ratings).order(session[:sort])
     if(params[:sort].nil? and !(session[:sort].nil?)) or (params[:ratings].nil? and !(session[:ratings].nil?))
       flash.keep
       redirect_to movies_path(sort: session[:sort], ratings: session[:ratings])
@@ -27,6 +34,15 @@ class MoviesController < ApplicationController
     #@movies = Movie.where(rating: t_param).order(@sort)
     
   end
+
+  def check_ratings
+    if params[:ratings]
+      params[:ratings].keys
+    else
+      @all_ratings
+    end
+  end
+
 
   def new
     # default: render 'new' template
